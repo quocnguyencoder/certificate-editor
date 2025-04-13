@@ -158,6 +158,12 @@
       />
     </div>
   </div>
+
+  <div class="mb-3">
+    <button class="btn btn-danger w-100" (click)="deleteSelectedElement()">
+      Delete Selected Element
+    </button>
+  </div>
 </div>
 
 <div *ngIf="!selectedObject" class="text-muted">

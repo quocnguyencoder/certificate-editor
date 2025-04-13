@@ -203,4 +203,17 @@ export class CertificateEditorComponent implements OnInit {
     );
     pdf.save('certificate.pdf');
   }
+
+  deleteSelectedElement() {
+    const activeObject = this.fabricService.canvas.getActiveObject();
+    if (activeObject) {
+      this.fabricService.canvas.remove(activeObject);
+      this.fabricService.canvas.discardActiveObject();
+      this.fabricService.canvas.renderAll();
+      this.selectedObject = null;
+      console.log('Selected element deleted.');
+    } else {
+      console.warn('No element selected to delete.');
+    }
+  }
 }

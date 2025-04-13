@@ -44,6 +44,7 @@
       <app-properties-panel
         [selectedObject]="selectedObject"
         (propertyChange)="fabricService.updateObject($event)"
+        (deleteElement)="deleteSelectedElement()"
       >
       </app-properties-panel>
     </div>

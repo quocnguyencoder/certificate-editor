@@ -11,6 +11,7 @@ import type { Object as FabricObject } from 'fabric/fabric-impl';
 export class PropertiesPanelComponent {
   @Input() selectedObject: FabricObject | null = null;
   @Output() propertyChange = new EventEmitter<{ name: string; value: any }>();
+  @Output() deleteElement = new EventEmitter<void>();
 
   fontFamilies = [
     'Arial',
@@ -53,5 +54,9 @@ export class PropertiesPanelComponent {
       // Emit the property change to the parent component
       this.propertyChange.emit({ name: property, value });
     }
+  }
+
+  deleteSelectedElement() {
+    this.deleteElement.emit();
   }
 }
