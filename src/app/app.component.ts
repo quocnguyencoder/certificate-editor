@@ -1,12 +1,24 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { CertificateEditorComponent } from './certificate-editor/certificate-editor.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  template: `
+    <div class="app-container">
+      <app-certificate-editor></app-certificate-editor>
+    </div>
+  `,
+  styles: [
+    `
+      .app-container {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+    `,
+  ],
+  imports: [CertificateEditorComponent],
 })
 export class AppComponent {
-  title = 'certificate-editor';
+  title = 'Certificate Template Editor';
 }

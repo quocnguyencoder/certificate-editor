@@ -1,0 +1,58 @@
+<div class="d-flex justify-content-between mb-3">
+  <!-- Current Template Name -->
+  <div>
+    <span *ngIf="currentTemplate; else noTemplate" class="fw-bold">
+      Current Template: {{ currentTemplate.name }}
+    </span>
+    <ng-template #noTemplate>
+      <span class="text-muted">No template selected</span>
+    </ng-template>
+  </div>
+
+  <!-- Toolbar Buttons -->
+  <div>
+    <button
+      class="btn btn-success me-2"
+      (click)="createNewTemplate.emit()"
+      title="Create New Template"
+    >
+      <i class="bi bi-file-earmark-plus"></i> New Template
+    </button>
+    <button
+      class="btn btn-primary me-2"
+      [disabled]="!currentTemplate"
+      (click)="saveTemplate.emit()"
+      title="Save Current Template"
+    >
+      <i class="bi bi-save"></i> Save Template
+    </button>
+  </div>
+
+  <div class="d-flex align-items-center">
+    <input
+      type="color"
+      class="form-control form-control-color d-inline-block me-2"
+      [(ngModel)]="backgroundColor"
+      (change)="onBackgroundColorChange()"
+    />
+
+    <label class="btn btn-outline-secondary me-2">
+      <i class="bi bi-image"></i> Background Image
+      <input
+        type="file"
+        accept="image/*"
+        hidden
+        (change)="onFileSelected($event)"
+      />
+    </label>
+    <div>
+      <button
+        class="btn btn-danger"
+        (click)="deleteBackgroundImage()"
+        title="Delete Background Image"
+      >
+        <i class="bi bi-trash"></i> Delete
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,32 @@
+<div>
+  <h5>Saved Templates</h5>
+
+  <!-- List of Saved Templates -->
+  <ul class="list-group">
+    <li
+      *ngFor="let template of savedTemplates"
+      class="list-group-item d-flex justify-content-between align-items-center"
+    >
+      {{ template.name }}
+      <div>
+        <button
+          class="btn btn-sm btn-primary me-2"
+          (click)="loadTemplate(template)"
+        >
+          Load
+        </button>
+        <button
+          class="btn btn-sm btn-danger"
+          (click)="deleteTemplate(template)"
+        >
+          Delete
+        </button>
+      </div>
+    </li>
+  </ul>
+
+  <!-- Message if no templates are saved -->
+  <div *ngIf="savedTemplates.length === 0" class="text-muted mt-3">
+    No templates saved yet.
+  </div>
+</div>

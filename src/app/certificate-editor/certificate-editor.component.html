@@ -1,0 +1,50 @@
+<div class="container-fluid h-100">
+  <div class="row h-100">
+    <!-- Elements Panel -->
+    <div class="col-md-2 bg-light p-3">
+      <app-elements-panel
+        (addText)="addText()"
+        (addImage)="addImage()"
+        (addShape)="addShape($event)"
+      >
+      </app-elements-panel>
+    </div>
+
+    <!-- Main Canvas Area -->
+    <div class="col-md-8 p-3">
+      <app-toolbar
+        [currentTemplate]="currentTemplate"
+        (createNewTemplate)="createNewTemplate()"
+        (saveTemplate)="saveTemplate()"
+      >
+      </app-toolbar>
+
+      <div [class.hidden]="!currentTemplate">
+        <div #canvasContainer class="canvas-container border">
+          <canvas #canvas id="certificate-canvas"></canvas>
+        </div>
+      </div>
+
+      <div *ngIf="!currentTemplate" class="no-template-message">
+        <p>Please select or create a template to start editing.</p>
+      </div>
+
+      <!-- Saved Templates Section -->
+      <app-saved-templates
+        [savedTemplates]="savedTemplates"
+        (templateLoaded)="loadTemplate($event)"
+        (templateDelete)="deleteTemplate($event)"
+      >
+      </app-saved-templates>
+    </div>
+
+    <!-- Properties Panel -->
+    <div class="col-md-2 bg-light p-3">
+      <app-properties-panel
+        [selectedObject]="selectedObject"
+        (propertyChange)="fabricService.updateObject($event)"
+      >
+      </app-properties-panel>
+    </div>
+  </div>
+</div>

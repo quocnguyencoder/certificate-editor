@@ -1,0 +1,165 @@
+<div *ngIf="selectedObject">
+  <h5>Properties</h5>
+
+  <div class="mb-3">
+    <label class="form-label">Left</label>
+    <input
+      type="number"
+      class="form-control"
+      [value]="selectedObject.left"
+      (change)="onPropertyChange('left', $event)"
+    />
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Top</label>
+    <input
+      type="number"
+      class="form-control"
+      [value]="selectedObject.top"
+      (change)="onPropertyChange('top', $event)"
+    />
+  </div>
+
+  <div *ngIf="selectedObject.type === 'textbox'">
+    <div class="mb-3">
+      <label class="form-label">Text</label>
+      <textarea
+        class="form-control"
+        [value]="getTextObject().text"
+        (change)="onPropertyChange('text', $event)"
+      ></textarea>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Font Family</label>
+      <select
+        class="form-select"
+        [value]="getTextObject().fontFamily"
+        (change)="onPropertyChange('fontFamily', $event)"
+      >
+        <option *ngFor="let font of fontFamilies" [value]="font">
+          {{ font }}
+        </option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Font Size</label>
+      <input
+        type="number"
+        class="form-control"
+        [value]="getTextObject().fontSize"
+        (change)="onPropertyChange('fontSize', $event)"
+      />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Text Color</label>
+      <input
+        type="color"
+        class="form-control form-control-color"
+        [value]="getTextObject().fill"
+        (change)="onPropertyChange('fill', $event)"
+      />
+    </div>
+
+    <!-- Font Weight -->
+    <div class="mb-3">
+      <label class="form-label">Font Weight</label>
+      <select
+        class="form-select"
+        [value]="getTextObject().fontWeight"
+        (change)="onPropertyChange('fontWeight', $event)"
+      >
+        <option value="normal">Normal</option>
+        <option value="bold">Bold</option>
+        <option value="lighter">Lighter</option>
+      </select>
+    </div>
+
+    <!-- Text Alignment -->
+    <div class="mb-3">
+      <label class="form-label">Text Alignment</label>
+      <select
+        class="form-select"
+        [value]="getTextObject().textAlign"
+        (change)="onPropertyChange('textAlign', $event)"
+      >
+        <option value="left">Left</option>
+        <option value="center">Center</option>
+        <option value="right">Right</option>
+        <option value="justify">Justify</option>
+      </select>
+    </div>
+
+    <!-- Italic -->
+    <div class="d-flex gap-2 mb-3">
+      <button
+        class="btn btn-outline-secondary"
+        [class.active]="getTextObject().fontStyle === 'italic'"
+        (click)="
+          onPropertyChange('fontStyle', {
+            target: {
+              value:
+                getTextObject().fontStyle === 'italic' ? 'normal' : 'italic'
+            }
+          })
+        "
+      >
+        <i class="bi bi-type-italic"></i>
+      </button>
+
+      <!-- Underline -->
+      <button
+        class="btn btn-outline-secondary"
+        [class.active]="getTextObject().underline"
+        (click)="
+          onPropertyChange('underline', {
+            target: { value: !getTextObject().underline }
+          })
+        "
+      >
+        <i class="bi bi-type-underline"></i>
+      </button>
+    </div>
+  </div>
+
+  <div
+    *ngIf="selectedObject.type === 'rect' || selectedObject.type === 'circle'"
+  >
+    <div class="mb-3">
+      <label class="form-label">Fill Color</label>
+      <input
+        type="color"
+        class="form-control form-control-color"
+        [value]="selectedObject.fill"
+        (change)="onPropertyChange('fill', $event)"
+      />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Stroke Color</label>
+      <input
+        type="color"
+        class="form-control form-control-color"
+        [value]="selectedObject.stroke"
+        (change)="onPropertyChange('stroke', $event)"
+      />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Stroke Width</label>
+      <input
+        type="number"
+        class="form-control"
+        [value]="selectedObject.strokeWidth"
+        (change)="onPropertyChange('strokeWidth', $event)"
+      />
+    </div>
+  </div>
+</div>
+
+<div *ngIf="!selectedObject" class="text-muted">
+  Select an object to edit its properties
+</div>

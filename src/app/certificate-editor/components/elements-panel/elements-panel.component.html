@@ -1,0 +1,24 @@
+<div class="d-grid gap-2">
+  <h5>Elements</h5>
+
+  <button class="btn btn-outline-primary" (click)="addText.emit()">
+    <i class="bi bi-text-paragraph"></i> Add Text
+  </button>
+
+  <button class="btn btn-outline-primary" (click)="addImage.emit()">
+    <i class="bi bi-image"></i> Add Image
+  </button>
+
+  <div class="mt-3">
+    <h6>Shapes</h6>
+    <div class="d-grid gap-2">
+      <button
+        *ngFor="let shape of shapes"
+        class="btn btn-outline-secondary"
+        (click)="addShape.emit(shape.type)"
+      >
+        <i class="{{ shape.icon }}"></i> {{ shape.name }}
+      </button>
+    </div>
+  </div>
+</div>
