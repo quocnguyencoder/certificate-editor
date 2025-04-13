@@ -26,6 +26,14 @@
     >
       <i class="bi bi-save"></i> Save Template
     </button>
+
+    <button
+      class="btn btn-warning"
+      (click)="exportToPDF.emit()"
+      title="Export to PDF"
+    >
+      <i class="bi bi-file-earmark-pdf"></i> Export to PDF
+    </button>
   </div>
 
   <div class="d-flex align-items-center">
@@ -51,7 +59,7 @@
         (click)="deleteBackgroundImage()"
         title="Delete Background Image"
       >
-        <i class="bi bi-trash"></i> Delete
+        <i class="bi bi-trash"></i>
       </button>
     </div>
   </div>

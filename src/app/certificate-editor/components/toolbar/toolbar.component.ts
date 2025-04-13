@@ -12,6 +12,7 @@ export class ToolbarComponent {
   @Input() currentTemplate: any = null;
   @Output() createNewTemplate = new EventEmitter<void>();
   @Output() saveTemplate = new EventEmitter<void>();
+  @Output() exportToPDF = new EventEmitter<void>();
 
   backgroundColor = '#ffffff';
 

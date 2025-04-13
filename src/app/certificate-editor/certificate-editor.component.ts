@@ -7,6 +7,7 @@ import { PropertiesPanelComponent } from './components/properties-panel/properti
 import { SavedTemplatesComponent } from './components/saved-templates/saved-templates.component';
 import { TemplateService } from './services/template.service';
 import { CommonModule } from '@angular/common';
+import jsPDF from 'jspdf';
 
 @Component({
   selector: 'app-certificate-editor',
@@ -180,5 +181,26 @@ export class CertificateEditorComponent implements OnInit {
       this.templateService.deleteTemplate(template);
       console.log('Template deleted:', template.name);
     }
+  }
+
+  exportToPDF() {
+    const canvasElement = this.canvas.nativeElement;
+    const canvasDataURL = canvasElement.toDataURL('image/png');
+
+    const pdf = new jsPDF({
+      orientation: 'landscape',
+      unit: 'px',
+      format: [this.template.width, this.template.height],
+    });
+
+    pdf.addImage(
+      canvasDataURL,
+      'PNG',
+      0,
+      0,
+      this.template.width,
+      this.template.height
+    );
+    pdf.save('certificate.pdf');
   }
 }
