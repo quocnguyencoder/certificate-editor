@@ -14,9 +14,11 @@
     <div class="col-md-8 p-3">
       <app-toolbar
         [currentTemplate]="currentTemplate"
+        [isPreviewMode]="isPreviewMode"
         (createNewTemplate)="createNewTemplate()"
         (saveTemplate)="saveTemplate()"
         (exportToPDF)="exportToPDF()"
+        (togglePreviewMode)="togglePreviewMode()"
       >
       </app-toolbar>
 
@@ -40,13 +42,21 @@
     </div>
 
     <!-- Properties Panel -->
-    <div class="col-md-2 bg-light p-3">
+    <div *ngIf="!isPreviewMode" class="col-md-2 bg-light p-3">
       <app-properties-panel
         [selectedObject]="selectedObject"
         (propertyChange)="fabricService.updateObject($event)"
         (deleteElement)="deleteSelectedElement()"
       >
       </app-properties-panel>
+    </div>
+    <div *ngIf="isPreviewMode" class="col-md-2 bg-light p-3">
+      <app-placeholder-panel
+        [visible]="isPreviewMode"
+        [placeholders]="placeholders"
+        (placeholderChange)="updatePlaceholder($event.key, $event.value)"
+      >
+      </app-placeholder-panel>
     </div>
   </div>
 </div>

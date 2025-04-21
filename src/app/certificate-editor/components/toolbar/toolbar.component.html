@@ -28,11 +28,27 @@
     </button>
 
     <button
-      class="btn btn-warning"
+      class="btn btn-warning me-2"
       (click)="exportToPDF.emit()"
       title="Export to PDF"
     >
       <i class="bi bi-file-earmark-pdf"></i> Export to PDF
+    </button>
+
+    <!-- Preview Mode Toggle Button -->
+    <button
+      class="btn"
+      [class.btn-info]="!isPreviewMode"
+      [class.btn-secondary]="isPreviewMode"
+      (click)="onTogglePreview()"
+      title="Toggle Preview Mode"
+    >
+      <i
+        class="bi"
+        [class.bi-eye]="!isPreviewMode"
+        [class.bi-eye-slash]="isPreviewMode"
+      ></i>
+      {{ isPreviewMode ? "Exit Preview" : "Preview" }}
     </button>
   </div>
 

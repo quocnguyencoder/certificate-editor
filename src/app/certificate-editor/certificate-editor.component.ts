@@ -8,6 +8,19 @@ import { SavedTemplatesComponent } from './components/saved-templates/saved-temp
 import { TemplateService } from './services/template.service';
 import { CommonModule } from '@angular/common';
 import jsPDF from 'jspdf';
+import { PlaceholderPanelComponent } from './components/placeholder-panel/placeholder-panel.component';
+
+interface PlaceholderData {
+  id: string;
+  key: string;
+  value: string;
+  objectIds: string[]; // Track which objects contain this placeholder
+}
+
+interface TextObjectWithMetadata extends fabric.Text {
+  __originalText?: string;
+  __placeholders?: string[]; // Track which placeholders exist in this object
+}
 
 @Component({
   selector: 'app-certificate-editor',
@@ -18,6 +31,7 @@ import jsPDF from 'jspdf';
     ToolbarComponent,
     PropertiesPanelComponent,
     SavedTemplatesComponent,
+    PlaceholderPanelComponent,
     CommonModule,
   ],
 })
@@ -36,6 +50,9 @@ export class CertificateEditorComponent implements OnInit {
   selectedObject: any = null;
   savedTemplates: { name: string; data: any }[] = [];
   currentTemplate: { name: string; data: any } | null = null;
+  isPreviewMode = false;
+  placeholderMap: Map<string, { id: string; key: string; value: string }> =
+    new Map();
 
   constructor(
     public fabricService: FabricService,
@@ -215,5 +232,127 @@ export class CertificateEditorComponent implements OnInit {
     } else {
       console.warn('No element selected to delete.');
     }
+  }
+
+  togglePreviewMode() {
+    this.isPreviewMode = !this.isPreviewMode;
+
+    if (this.isPreviewMode) {
+      this.scanPlaceholders();
+    } else {
+      this.restoreOriginalTexts();
+      this.placeholderMap.clear();
+    }
+  }
+
+  private scanPlaceholders() {
+    this.placeholderMap.clear();
+    const canvas = this.fabricService.canvas;
+    let placeholderId = 0;
+
+    canvas.forEachObject((obj) => {
+      if (obj.type === 'textbox' || obj.type === 'text') {
+        const text = (obj as fabric.Text).text;
+        const matches = text?.match(/{{(.+?)}}/g) || [];
+
+        matches.forEach((match) => {
+          const key = match.replace(/[{}]/g, '').trim();
+          const id = `ph-${obj.type}-${placeholderId++}-${key}`;
+
+          if (!this.placeholderMap.has(key)) {
+            this.placeholderMap.set(key, {
+              id,
+              key,
+              value: '',
+            });
+          }
+        });
+      }
+    });
+  }
+
+  get placeholders() {
+    return Array.from(this.placeholderMap.values());
+  }
+
+  updatePlaceholder(key: string, value: string) {
+    const canvas = this.fabricService.canvas;
+
+    canvas.forEachObject((obj) => {
+      if (obj.type === 'textbox' || obj.type === 'text') {
+        const textObj = obj as TextObjectWithMetadata;
+
+        // First time: store the original text and identify placeholders
+        if (!textObj.__originalText) {
+          textObj.__originalText = textObj.text;
+          textObj.__placeholders = [];
+
+          // Find all placeholders in this text object
+          const matches = textObj.text?.match(/{{(.+?)}}/g) || [];
+          textObj.__placeholders = matches.map((m) =>
+            m.replace(/[{}]/g, '').trim()
+          );
+        }
+
+        // Check if this object contains the placeholder we're updating
+        if (textObj.__placeholders?.includes(key)) {
+          // Start with the original text
+          let newText = textObj.__originalText || '';
+
+          // Replace all placeholders with their current values
+          textObj.__placeholders?.forEach((placeholderKey) => {
+            const placeholderPattern = `{{ ${placeholderKey} }}`;
+
+            // If the current placeholder is being updated and has an empty value,
+            // keep the original placeholder text
+            if (placeholderKey === key && value === '') {
+              // Do nothing - leave the original placeholder in place
+            } else {
+              // Otherwise use the appropriate value
+              const placeholderValue =
+                placeholderKey === key
+                  ? value // Use the new value for the placeholder being updated
+                  : this.placeholderMap.get(placeholderKey)?.value || ''; // Use existing value
+
+              // Only replace if the value is not empty
+              if (placeholderValue !== '') {
+                newText = newText.replace(
+                  new RegExp(placeholderPattern, 'g'),
+                  placeholderValue
+                );
+              }
+            }
+          });
+
+          textObj.set('text', newText);
+        }
+      }
+    });
+
+    // Update the value in the placeholder map
+    if (this.placeholderMap.has(key)) {
+      const placeholder = this.placeholderMap.get(key)!;
+      placeholder.value = value;
+      this.placeholderMap.set(key, placeholder);
+    }
+
+    canvas.renderAll();
+  }
+
+  private restoreOriginalTexts() {
+    const canvas = this.fabricService.canvas;
+
+    canvas.forEachObject((obj) => {
+      if (
+        (obj.type === 'textbox' || obj.type === 'text') &&
+        (obj as any).__originalText
+      ) {
+        const textObj = obj as fabric.Text;
+        textObj.set('text', (obj as any).__originalText);
+        delete (obj as any).__originalText;
+      }
+    });
+
+    canvas.renderAll();
   }
 }

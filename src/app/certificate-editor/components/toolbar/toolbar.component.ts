@@ -10,9 +10,11 @@ import { FabricService } from '../../services/fabric.service';
 })
 export class ToolbarComponent {
   @Input() currentTemplate: any = null;
+  @Input() isPreviewMode = false;
   @Output() createNewTemplate = new EventEmitter<void>();
   @Output() saveTemplate = new EventEmitter<void>();
   @Output() exportToPDF = new EventEmitter<void>();
+  @Output() togglePreviewMode = new EventEmitter<void>();
 
   backgroundColor = '#ffffff';
 
@@ -40,5 +42,9 @@ export class ToolbarComponent {
 
   deleteBackgroundImage() {
     this.fabricService.setBackgroundImage(''); // Clear the background image
+  }
+
+  onTogglePreview() {
+    this.togglePreviewMode.emit();
   }
 }
