@@ -161,6 +161,49 @@
     </div>
   </div>
 
+  <div *ngIf="selectedObject.type === 'line'">
+    <div class="mb-3">
+      <label class="form-label">Stroke Color</label>
+      <input
+        type="color"
+        class="form-control form-control-color"
+        [value]="selectedObject.stroke"
+        (change)="onPropertyChange('stroke', $event)"
+      />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Stroke Width</label>
+      <input
+        type="number"
+        class="form-control"
+        [value]="selectedObject.strokeWidth"
+        (change)="onPropertyChange('strokeWidth', $event)"
+      />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Line Style</label>
+      <select class="form-select" (change)="onLineStyleChange($event)">
+        <option value="solid" [selected]="!selectedObject.strokeDashArray">
+          Solid
+        </option>
+        <option
+          value="dashed"
+          [selected]="selectedObject.strokeDashArray?.[0] === 10"
+        >
+          Dashed
+        </option>
+        <option
+          value="dotted"
+          [selected]="selectedObject.strokeDashArray?.[0] === 2"
+        >
+          Dotted
+        </option>
+      </select>
+    </div>
+  </div>
+
   <div class="mb-3">
     <button
       class="btn btn-outline-secondary w-100"

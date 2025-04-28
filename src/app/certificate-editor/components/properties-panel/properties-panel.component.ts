@@ -59,6 +59,27 @@ export class PropertiesPanelComponent {
     }
   }
 
+  onLineStyleChange(event: any) {
+    const style = event.target.value;
+    if (this.selectedObject) {
+      switch (style) {
+        case 'solid':
+          this.selectedObject.strokeDashArray = undefined;
+          break;
+        case 'dashed':
+          this.selectedObject.strokeDashArray = [10, 5];
+          break;
+        case 'dotted':
+          this.selectedObject.strokeDashArray = [2, 2];
+          break;
+      }
+      this.propertyChange.emit({
+        name: 'strokeDashArray',
+        value: this.selectedObject.strokeDashArray,
+      });
+    }
+  }
+
   deleteSelectedElement() {
     this.deleteElement.emit();
   }
