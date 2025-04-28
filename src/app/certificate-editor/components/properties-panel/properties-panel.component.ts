@@ -12,6 +12,7 @@ export class PropertiesPanelComponent {
   @Input() selectedObject: FabricObject | null = null;
   @Output() propertyChange = new EventEmitter<{ name: string; value: any }>();
   @Output() deleteElement = new EventEmitter<void>();
+  @Output() cloneElement = new EventEmitter<void>();
 
   fontFamilies = [
     'Arial',
@@ -58,5 +59,9 @@ export class PropertiesPanelComponent {
 
   deleteSelectedElement() {
     this.deleteElement.emit();
+  }
+
+  cloneSelectedElement() {
+    this.cloneElement.emit();
   }
 }

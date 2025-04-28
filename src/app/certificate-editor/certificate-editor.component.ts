@@ -73,11 +73,18 @@ export class CertificateEditorComponent implements OnInit {
         // Check if the object has a type property
         const objType = activeObject.type ? activeObject.type : 'unknown';
         this.selectedObject = activeObject;
+      } else {
+        console.warn('No active object found.');
+      }
+    });
 
-        console.log('Selected object type:', objType);
-        console.log('Selected object:', this.selectedObject);
+    this.fabricService.canvas.on('selection:updated', (e) => {
+      const activeObject = this.fabricService.canvas.getActiveObject();
 
-        // Additional logic to handle the selected object can go here
+      if (activeObject) {
+        // Check if the object has a type property
+        const objType = activeObject.type ? activeObject.type : 'unknown';
+        this.selectedObject = activeObject;
       } else {
         console.warn('No active object found.');
       }
@@ -165,7 +172,6 @@ export class CertificateEditorComponent implements OnInit {
       this.savedTemplates.push(newTemplate);
       this.templateService.saveTemplate(newTemplate);
       this.loadTemplate(newTemplate);
-      console.log('New template created:', templateName);
     }
   }
 
@@ -177,7 +183,6 @@ export class CertificateEditorComponent implements OnInit {
       alert(
         `Template "${this.currentTemplate.name}" has been saved successfully!`
       );
-      console.log('Template updated:', this.currentTemplate.name);
     } else {
       alert('No template is currently loaded to save.');
       console.error('No template is currently loaded to save.');
@@ -187,8 +192,6 @@ export class CertificateEditorComponent implements OnInit {
   loadTemplate(template: any) {
     this.fabricService.loadTemplateData(template.data);
     this.currentTemplate = template; // Track the currently loaded template
-    console.log('Template loaded:', template.name);
-    console.log('Current:', this.currentTemplate);
   }
 
   deleteTemplate(template: any) {
@@ -196,7 +199,6 @@ export class CertificateEditorComponent implements OnInit {
     if (index > -1) {
       this.savedTemplates.splice(index, 1);
       this.templateService.deleteTemplate(template);
-      console.log('Template deleted:', template.name);
     }
   }
 
@@ -228,9 +230,26 @@ export class CertificateEditorComponent implements OnInit {
       this.fabricService.canvas.discardActiveObject();
       this.fabricService.canvas.renderAll();
       this.selectedObject = null;
-      console.log('Selected element deleted.');
     } else {
       console.warn('No element selected to delete.');
+    }
+  }
+
+  cloneSelectedElement() {
+    const activeObject = this.fabricService.canvas.getActiveObject();
+    if (activeObject) {
+      activeObject.clone((cloned: fabric.Object) => {
+        cloned.set({
+          left: (activeObject.left || 0) + 20, // Offset the clone
+          top: (activeObject.top || 0) + 20,
+        });
+        this.fabricService.canvas.add(cloned);
+        this.fabricService.canvas.setActiveObject(cloned);
+        this.fabricService.canvas.renderAll();
+        console.log('Element cloned.');
+      });
+    } else {
+      console.warn('No element selected to clone.');
     }
   }
 

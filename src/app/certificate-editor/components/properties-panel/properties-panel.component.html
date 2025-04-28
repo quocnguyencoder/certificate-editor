@@ -1,7 +1,8 @@
 <div *ngIf="selectedObject">
   <h5>Properties</h5>
 
-  <div class="mb-3">
+  <!-- Hide Left Property -->
+  <!-- <div class="mb-3">
     <label class="form-label">Left</label>
     <input
       type="number"
@@ -9,9 +10,10 @@
       [value]="selectedObject.left"
       (change)="onPropertyChange('left', $event)"
     />
-  </div>
+  </div> -->
 
-  <div class="mb-3">
+  <!-- Hide Top Property -->
+  <!-- <div class="mb-3">
     <label class="form-label">Top</label>
     <input
       type="number"
@@ -19,7 +21,7 @@
       [value]="selectedObject.top"
       (change)="onPropertyChange('top', $event)"
     />
-  </div>
+  </div> -->
 
   <div *ngIf="selectedObject.type === 'textbox'">
     <div class="mb-3">
@@ -157,6 +159,12 @@
         (change)="onPropertyChange('strokeWidth', $event)"
       />
     </div>
+  </div>
+
+  <div class="mb-3">
+    <button class="btn btn-secondary w-100" (click)="cloneSelectedElement()">
+      Clone Element
+    </button>
   </div>
 
   <div class="mb-3">

@@ -1,29 +1,43 @@
 <div>
-  <h5>Saved Templates</h5>
+  <h5 class="pt-2">Saved Templates</h5>
 
-  <!-- List of Saved Templates -->
-  <ul class="list-group">
-    <li
-      *ngFor="let template of savedTemplates"
-      class="list-group-item d-flex justify-content-between align-items-center"
-    >
-      {{ template.name }}
-      <div>
-        <button
-          class="btn btn-sm btn-primary me-2"
-          (click)="loadTemplate(template)"
-        >
-          Load
-        </button>
-        <button
-          class="btn btn-sm btn-danger"
-          (click)="deleteTemplate(template)"
-        >
-          Delete
-        </button>
-      </div>
-    </li>
-  </ul>
+  <!-- Table of Saved Templates -->
+  <table
+    class="table table-striped mt-3 text-center"
+    *ngIf="savedTemplates.length > 0"
+  >
+    <thead>
+      <tr>
+        <th scope="col" class="text-center">#</th>
+        <th scope="col" class="text-center">Template Name</th>
+        <th scope="col" class="text-center">Description</th>
+        <th scope="col" class="text-center text-end">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let template of savedTemplates; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td class="text-left">{{ template.name }}</td>
+        <td></td>
+        <td class="text-center" style="width: 25%">
+          <button
+            class="btn btn-sm btn-primary me-2"
+            (click)="loadTemplate(template)"
+            title="Load Template"
+          >
+            <i class="bi bi-folder-symlink"></i>
+          </button>
+          <button
+            class="btn btn-sm btn-danger"
+            (click)="deleteTemplate(template)"
+            title="Delete Template"
+          >
+            <i class="bi bi-trash"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
   <!-- Message if no templates are saved -->
   <div *ngIf="savedTemplates.length === 0" class="text-muted mt-3">
