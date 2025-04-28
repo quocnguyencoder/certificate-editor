@@ -19,6 +19,8 @@
         (addText)="addText()"
         (addImage)="addImage()"
         (addShape)="addShape($event)"
+        (bringToFront)="bringToFront()"
+        (sendToBack)="sendToBack()"
       >
       </app-elements-panel>
     </div>
@@ -58,6 +60,8 @@
         (propertyChange)="fabricService.updateObject($event)"
         (deleteElement)="deleteSelectedElement()"
         (cloneElement)="cloneSelectedElement()"
+        (bringToFront)="bringToFront()"
+        (sendToBack)="sendToBack()"
       >
       </app-properties-panel>
     </div>

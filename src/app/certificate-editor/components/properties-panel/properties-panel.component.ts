@@ -13,6 +13,8 @@ export class PropertiesPanelComponent {
   @Output() propertyChange = new EventEmitter<{ name: string; value: any }>();
   @Output() deleteElement = new EventEmitter<void>();
   @Output() cloneElement = new EventEmitter<void>();
+  @Output() bringToFront = new EventEmitter<void>();
+  @Output() sendToBack = new EventEmitter<void>();
 
   fontFamilies = [
     'Arial',

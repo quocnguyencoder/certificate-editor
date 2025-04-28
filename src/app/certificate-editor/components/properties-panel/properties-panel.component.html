@@ -162,6 +162,21 @@
   </div>
 
   <div class="mb-3">
+    <button
+      class="btn btn-outline-secondary w-100"
+      (click)="bringToFront.emit()"
+    >
+      <i class="bi bi-arrow-up"></i> Bring to Front
+    </button>
+  </div>
+
+  <div class="mb-3">
+    <button class="btn btn-outline-secondary w-100" (click)="sendToBack.emit()">
+      <i class="bi bi-arrow-down"></i> Send to Back
+    </button>
+  </div>
+
+  <div class="mb-3">
     <button class="btn btn-secondary w-100" (click)="cloneSelectedElement()">
       Clone Element
     </button>

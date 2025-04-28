@@ -43,9 +43,9 @@ export class FabricService {
       top: 100,
       width: 100,
       height: 100,
-      fill: 'rgba(255, 0, 0, 0.5)',
-      stroke: 'red',
-      strokeWidth: 2,
+      fill: '#000000', // Correct initial fill color
+      stroke: '#000000', // Correct initial stroke color
+      strokeWidth: 1, // Correct initial stroke width
       hasControls: true,
     });
 
@@ -59,9 +59,9 @@ export class FabricService {
       left: 100,
       top: 100,
       radius: 50,
-      fill: 'rgba(0, 0, 255, 0.5)',
-      stroke: 'blue',
-      strokeWidth: 2,
+      fill: '#000000', // Correct initial fill color
+      stroke: '#000000', // Correct initial stroke color
+      strokeWidth: 1, // Correct initial stroke width
       hasControls: true,
     });
 
@@ -72,8 +72,8 @@ export class FabricService {
 
   addLine() {
     const line = new fabric.Line([50, 100, 200, 100], {
-      stroke: 'green',
-      strokeWidth: 2,
+      stroke: '#000000', // Correct initial stroke color
+      strokeWidth: 1, // Correct initial stroke width
       hasControls: true,
     });
 
@@ -140,5 +140,15 @@ export class FabricService {
       this.canvas.add(img);
       this.canvas.renderAll();
     });
+  }
+
+  bringToFront(object: fabric.Object) {
+    this.canvas.bringToFront(object);
+    this.canvas.renderAll();
+  }
+
+  sendToBack(object: fabric.Object) {
+    this.canvas.sendToBack(object);
+    this.canvas.renderAll();
   }
 }

@@ -253,6 +253,24 @@ export class CertificateEditorComponent implements OnInit {
     }
   }
 
+  bringToFront() {
+    const activeObject = this.fabricService.canvas.getActiveObject();
+    if (activeObject) {
+      this.fabricService.bringToFront(activeObject);
+    } else {
+      console.warn('No element selected to bring to front.');
+    }
+  }
+
+  sendToBack() {
+    const activeObject = this.fabricService.canvas.getActiveObject();
+    if (activeObject) {
+      this.fabricService.sendToBack(activeObject);
+    } else {
+      console.warn('No element selected to send to back.');
+    }
+  }
+
   togglePreviewMode() {
     this.isPreviewMode = !this.isPreviewMode;
 
