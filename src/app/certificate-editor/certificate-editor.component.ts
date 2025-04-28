@@ -9,6 +9,7 @@ import { TemplateService } from './services/template.service';
 import { CommonModule } from '@angular/common';
 import jsPDF from 'jspdf';
 import { PlaceholderPanelComponent } from './components/placeholder-panel/placeholder-panel.component';
+import { fabric } from 'fabric';
 
 interface PlaceholderData {
   id: string;
@@ -65,6 +66,111 @@ export class CertificateEditorComponent implements OnInit {
       this.template.width,
       this.template.height
     );
+
+    const canvas = this.fabricService.canvas;
+
+    // Add alignment guides
+    const alignmentGuides = {
+      vertical: null as fabric.Line | null,
+      horizontal: null as fabric.Line | null,
+      centerVertical: null as fabric.Line | null,
+      centerHorizontal: null as fabric.Line | null,
+    };
+
+    const drawGuideLine = (
+      type: 'vertical' | 'horizontal' | 'centerVertical' | 'centerHorizontal',
+      position: number
+    ) => {
+      if (alignmentGuides[type]) {
+        canvas.remove(alignmentGuides[type]!);
+      }
+
+      const isVertical = type === 'vertical' || type === 'centerVertical';
+      const line = new fabric.Line(
+        isVertical
+          ? [position, 0, position, canvas.height || 0]
+          : [0, position, canvas.width || 0, position],
+        {
+          stroke: type.includes('center') ? '#808080' : '#A9A9A9', // Lighter dark colors
+          strokeWidth: 1,
+          selectable: false,
+          evented: false,
+          strokeDashArray: [5, 5], // Dashed line style
+        }
+      );
+
+      alignmentGuides[type] = line;
+      canvas.add(line);
+    };
+
+    const clearGuideLines = () => {
+      Object.keys(alignmentGuides).forEach((key) => {
+        const guide = alignmentGuides[key as keyof typeof alignmentGuides];
+        if (guide) {
+          canvas.remove(guide);
+          alignmentGuides[key as keyof typeof alignmentGuides] = null;
+        }
+      });
+    };
+
+    canvas.on('object:moving', (e) => {
+      const activeObject = e.target;
+      if (!activeObject) return;
+
+      const tolerance = 5; // Alignment tolerance in pixels
+      let verticalMatch = null;
+      let horizontalMatch = null;
+
+      const canvasCenterX = (canvas.width || 0) / 2;
+      const canvasCenterY = (canvas.height || 0) / 2;
+
+      // Check alignment with other objects
+      canvas.forEachObject((obj) => {
+        if (obj === activeObject) return;
+
+        // Check vertical alignment
+        if (Math.abs((obj.left || 0) - (activeObject.left || 0)) < tolerance) {
+          verticalMatch = obj.left;
+        }
+
+        // Check horizontal alignment
+        if (Math.abs((obj.top || 0) - (activeObject.top || 0)) < tolerance) {
+          horizontalMatch = obj.top;
+        }
+      });
+
+      // Check alignment with canvas center
+      if (
+        Math.abs(
+          (activeObject.left || 0) + activeObject.width! / 2 - canvasCenterX
+        ) < tolerance
+      ) {
+        drawGuideLine('centerVertical', canvasCenterX);
+        activeObject.set('left', canvasCenterX - activeObject.width! / 2);
+      } else if (verticalMatch !== null) {
+        drawGuideLine('vertical', verticalMatch);
+        activeObject.set('left', verticalMatch);
+      }
+
+      if (
+        Math.abs(
+          (activeObject.top || 0) + activeObject.height! / 2 - canvasCenterY
+        ) < tolerance
+      ) {
+        drawGuideLine('centerHorizontal', canvasCenterY);
+        activeObject.set('top', canvasCenterY - activeObject.height! / 2);
+      } else if (horizontalMatch !== null) {
+        drawGuideLine('horizontal', horizontalMatch);
+        activeObject.set('top', horizontalMatch);
+      }
+
+      canvas.renderAll();
+    });
+
+    canvas.on('mouse:up', () => {
+      clearGuideLines();
+      canvas.renderAll();
+    });
 
     this.fabricService.canvas.on('selection:created', (e) => {
       const activeObject = this.fabricService.canvas.getActiveObject();
